@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Phuong Iu Classifier</title>
+    <link rel="icon" href="heart.png" type="image/png">
+    <script
+        type="module"
+        src="https://gradio.s3-us-west-2.amazonaws.com/4.11.0/gradio.js"
+    ></script>
+
+    <script 
+        type="module" 
+    >
+        import confetti from 'https://cdn.skypack.dev/canvas-confetti';
+        const celebrationSound = new Audio('Kids Cheering.m4a');
+        const sadSound = new Audio('Sad Violin.m4a');
+
+        var curOutput = '';
+        function handleOutputChange(output) {
+            if (output == curOutput) return;
+
+            console.log('Predicted ${output}!');
+            if (output == 'Phưng iu😻') {
+                confetti();
+                celebrationSound.play();
+            }
+            else {
+                sadSound.play();
+            }
+            curOutput = output;
+        }
+        function handleMutation(mutationsList, observer) {
+            for (const mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    const matchingElements = document.querySelectorAll('.output-class');
+                    for (const element of matchingElements) {
+                        handleOutputChange(element.textContent);
+                    }
+                }
+            }
+        }
+
+        const config = { childList: true, subtree: true, characterData: true };
+
+        const observer = new MutationObserver(handleMutation);
+
+        observer.observe(document.body, config);
+    </script>
+</head>
+<body>
+    <!-- <h1>Welcome to My Website</h1> -->
+    <gradio-app 
+        src="https://baobaybong-phuong-classifier.hf.space"
+        container="false"
+        theme_mode="light"
+    ></gradio-app>
+</body>
+</html>
